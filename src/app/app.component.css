@@ -1,0 +1,13 @@
+.link,a {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+    margin: auto;
+    max-width: 500px;
+    text-decoration: none;
+  
+}
