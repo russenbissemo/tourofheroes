@@ -72,10 +72,43 @@ export class HeroService {
   }
 ///** POST: add a new hero to the server */
  addHero(hero: Hero): Observable<Hero>{
-  return this.http.post<Hero>(this.heroesUrl, hero, this.httpOptions).pipe(
+  //Cette ligne envoie une requête HTTP POST au heroesUrlpoint de terminaison 
+  //avec l' heroobjet comme charge utile. Elle renvoie un Observable qui émet un Heroobjet.
+  return this.http.post<Hero>(this.heroesUrl, hero, this.httpOptions)
+
+  //pipe()- Cette méthode permet d'enchaîner les opérateurs 
+  //RxJS à l'observable retourné par this.http.post.
+  .pipe(
+    // tap()- Cet opérateur vous permet d'effectuer des effets secondaires, 
+    //comme la journalisation ou la modification de la valeur émise, 
+    //sans changer l'observable lui-même
     tap((newHero:Hero ) => this.log(`added hero w/id id=${newHero.id}`)),
     catchError(this.handleError<Hero>('addHero'))
   )
  }
+ /** Supprimer le Hero du Serveur */
 
+deleteHero(id: number): Observable<Hero>{
+  const url = `${this.heroesUrl}/${id}`;
+
+  return this.http.delete<Hero>(url, this.httpOptions).pipe(
+    tap(_ => this.log(`deleted hero id=${id}`)),
+    catchError(this.handleError<Hero>('deleteHero'))
+  )
+}
+/* OBTENIR les héros dont le nom contient le terme de recherche */
+searchHeroes(term:string): Observable<Hero[]> {
+  if(!term.trim()){
+    // if not search term , return empty herro array;
+    //of permet de gérer le résultat d'une recherche vide
+    return of([])
+  }
+  return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
+    tap(x=> x.length ?
+      this.log(`found heroes matching "${term}"`) :
+
+      this.log(`no heroes matching "${term}`)),
+      catchError(this.handleError<Hero[]>('searchEroes',[]))
+  )
+}
 }

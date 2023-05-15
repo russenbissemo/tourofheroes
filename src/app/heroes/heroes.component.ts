@@ -36,5 +36,11 @@ export class HeroesComponent implements OnInit {
       this.heroes.push(hero);
     })
   }
+  delete(hero:Hero): void {
+    // Renvoie moi un tableau avec avec tous 
+    //les heros de celui que je te passe en parametre
+    this.heroes = this.heroes.filter(h => h!== hero);
+    this.heroService.deleteHero(hero.id).subscribe();
+  }
   
 }
